@@ -86,8 +86,8 @@ export const Background = styled.div`
  max-width: 1080px;
  width: 100%;
  height: 100%;
- align-items: center
- justify-content: center
+ align-items: center;
+ justify-content: center;
 
 `;
 
@@ -98,5 +98,7 @@ export const Image = styled.img`
  min-height: auto;      /* Mínimo da altura, por padrão “auto” */
  background-size:100%;
  background-repeat: no-repeat;
+ padding: 20px;
+ border-radius: 5%;
 
 `;
