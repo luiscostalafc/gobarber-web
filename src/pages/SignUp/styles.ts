@@ -94,8 +94,10 @@ export const Image = styled.img`
  max-width: 1080px;   /* Máximo da largura da imagem */
  width: 100%;
  max-height: 100%;  /* Máximo da altura da imagem */
- min-height: auto;    /* Mínimo da altura, por padrão “auto” */
+ min-height: auto;      /* Mínimo da altura, por padrão “auto” */
  background-size:100%;
  background-repeat: no-repeat;
+ padding: 20px;
+ border-radius: 5%;
 
 `;
