@@ -15,6 +15,7 @@ border-radius: 10px;
 padding: 16px;
 width: 100%;
 
+
 border: 2px solid #232129;
 color: #666360;
 
@@ -40,6 +41,7 @@ input {
  background: transparent;
  border: 0;
  color: #f4ede8;
+
 
      &::placeholder {
        color: #666360;
