@@ -3,6 +3,7 @@ import { FiLogIn, FiMail, FiLock } from 'react-icons/fi'
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup'
+import { Link } from 'react-router-dom'
 
 import { useAuth } from '../../hooks/auth'
 import { useToast } from '../../hooks/toast'
@@ -14,7 +15,7 @@ import signInBackgroundImg from '../../assets/sign-in-background.png'
 import Button from '../../components/Button'
 import Input from  '../../components/Input'
 
-import { Container, Content, Background, Image } from './styles'
+import { Container, Content, Background, Image, AnimationContainer } from './styles'
 
 interface SignInFormData {
    email: string
@@ -49,6 +50,8 @@ const SignIn: React.FC = () => {
         const errors = getValidationErrors(err)
 
       formRef.current?.setErrors(errors)
+
+      return
       }
 
       addToast({
@@ -64,6 +67,7 @@ const SignIn: React.FC = () => {
   return (
     <Container>
       <Content>
+        <AnimationContainer>
         <img src={logoImg} alt="GoBarber" />
 
         <Form ref={formRef} onSubmit={handleSubmit}>
@@ -74,12 +78,13 @@ const SignIn: React.FC = () => {
 
           <Button type="submit">Entrar</Button>
 
-          <a href="forgot">Esqueci minha senha</a>
+          <Link to="forgot">Esqueci minha senha</Link>
         </Form>
-        <a href="login">
+        <Link to="/signup">
           <FiLogIn />
     Criar conta
-    </a>
+    </Link>
+    </AnimationContainer>
       </Content>
 
       <Background>
