@@ -1,107 +1,114 @@
-import React, { useRef, useCallback, useState } from 'react'
-import { FiLogIn, FiMail } from 'react-icons/fi'
+import React, { useRef, useCallback, useState } from 'react';
+import { FiLogIn, FiMail } from 'react-icons/fi';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import * as Yup from 'yup'
-import { Link } from 'react-router-dom'
+import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
 
-import { useToast } from '../../hooks/toast'
-import getValidationErrors from '../../utils/getValidationErrors'
+import { useToast } from '../../hooks/toast';
+import getValidationErrors from '../../utils/getValidationErrors';
 
-import logoImg from '../../assets/logo.svg'
-import signInBackgroundImg from '../../assets/sign-in-background.png'
+import logoImg from '../../assets/logo.svg';
+import signInBackgroundImg from '../../assets/sign-in-background.png';
 
-import Button from '../../components/Button'
-import Input from  '../../components/Input'
+import Button from '../../components/Button';
+import Input from '../../components/Input';
 
-import { Container, Content, Background, Image, AnimationContainer } from './styles'
+import {
+  Container,
+  Content,
+  Background,
+  Image,
+  AnimationContainer,
+} from './styles';
 import api from '../../services/api';
 
 interface ForgotFormData {
-   email: string
+  email: string;
 }
 
 const ForgotPassword: React.FC = () => {
-  const [ loading, setLoading ] = useState(false)
-  const formRef = useRef<FormHandles>(null)
+  const [loading, setLoading] = useState(false);
+  const formRef = useRef<FormHandles>(null);
 
-  const { addToast } = useToast()
+  const { addToast } = useToast();
 
-  //const history = useHistory()
+  // const history = useHistory()
 
+  const handleSubmit = useCallback(
+    async (data: ForgotFormData) => {
+      try {
+        setLoading(true);
 
-  const handleSubmit = useCallback(async (data: ForgotFormData) => {
-    try {
-      setLoading(true)
+        formRef.current?.setErrors({});
 
-      formRef.current?.setErrors({})
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('E-mail obrigatório')
+            .email('Digite um e-mail válido'),
+        });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      const schema = Yup.object().shape({
-        email: Yup.string().required('E-mail obrigatório').email('Digite um e-mail válido'),
-      })
-      await schema.validate(data, {
-        abortEarly:false,
-      })
+        await api.post('/password/forgot', {
+          email: data.email,
+        });
 
-     await api.post('/password/forgot', {
-        email: data.email,
-      })
+        addToast({
+          type: 'success',
+          title: 'E-mail de recuperação enviado',
+          description:
+            'Enviamos um e-mail para confirmar a recuperação de senha, cheque sua caixa de entrada',
+        });
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
 
-      addToast({
-        type: 'success',
-        title: 'E-mail de recuperação enviado',
-        description:
-          'Enviamos um e-mail para confirmar a recuperação de senha, cheque sua caixa de entrada',
-      })
+          formRef.current?.setErrors(errors);
 
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err)
+          return;
+        }
 
-      formRef.current?.setErrors(errors)
-
-      return
+        addToast({
+          type: 'info',
+          title: 'Erro na recuperação de senha',
+          description:
+            'Ocorreu um erro ao tentar realizar a recuperação de senha, tente novamente',
+        });
+      } finally {
+        setLoading(false);
       }
-
-      addToast({
-        type: 'info',
-        title: 'Erro na recuperação de senha',
-        description: 'Ocorreu um erro ao tentar realizar a recuperação de senha, tente novamente',
-      });
-    } finally{
-      setLoading(false);
-    }
-  }, [addToast])
-
+    },
+    [addToast],
+  );
 
   return (
     <Container>
       <Content>
         <AnimationContainer>
-        <img src={logoImg} alt="GoBarber" />
+          <img src={logoImg} alt="GoBarber" />
 
-        <Form ref={formRef} onSubmit={handleSubmit}>
-          <h1>Recuperar senha</h1>
-          <Input name="email" icon={FiMail} placeholder="E-mail" />
+          <Form ref={formRef} onSubmit={handleSubmit}>
+            <h1>Recuperar senha</h1>
+            <Input name="email" icon={FiMail} placeholder="E-mail" />
 
-          <Button loading={loading} type="submit">Recuperar</Button>
-
-        </Form>
-        <Link to="/">
-          <FiLogIn />
-    Voltar ao login
-    </Link>
-    </AnimationContainer>
+            <Button loading={loading} type="submit">
+              Recuperar
+            </Button>
+          </Form>
+          <Link to="/">
+            <FiLogIn />
+            Voltar ao login
+          </Link>
+        </AnimationContainer>
       </Content>
 
       <Background>
-      <Image src={signInBackgroundImg} />
+        <Image src={signInBackgroundImg} />
       </Background>
     </Container>
-
   );
-}
+};
 
-
-
-export default ForgotPassword
+export default ForgotPassword;

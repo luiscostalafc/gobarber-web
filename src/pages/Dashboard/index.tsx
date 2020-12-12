@@ -1,9 +1,18 @@
-import React from 'react'
+import React from 'react';
 
-import { FiPower } from 'react-icons/fi';
-import { Container, Profile, HeaderContent, Header } from './styles';
+import { FiClock, FiPower } from 'react-icons/fi';
+import {
+  Container,
+  Profile,
+  HeaderContent,
+  Header,
+  Content,
+  Schedule,
+  NextAppointment,
+  Calendar,
+} from './styles';
 
-import logoImg from '../../assets/logo.svg'
+import logoImg from '../../assets/logo.svg';
 import { useAuth } from '../../hooks/auth';
 
 const Dashboard: React.FC = () => {
@@ -16,11 +25,15 @@ const Dashboard: React.FC = () => {
           <img src={logoImg} alt="GoBarber" />
 
           <Profile>
-            <img src={user.avatar_url}
+            <img
+              src={
+                user.avatar_url ||
+                'https://gravatar.com/avatar/1d0df06e255a4ab0702a05a5608eacd3?s=400&d=wavatar&r=x'
+              }
               alt={user.name}
             />
             <div>
-              <span>Bem-vindo,{" "}</span>
+              <span>Bem-vindo, </span>
               <strong>{user.name}</strong>
             </div>
           </Profile>
@@ -29,9 +42,38 @@ const Dashboard: React.FC = () => {
           </button>
         </HeaderContent>
       </Header>
+
+      <Content>
+        <Schedule>
+          <h1>Horários agendados</h1>
+          <p>
+            <span>Hoje</span>
+            <span>Dia 06</span>
+            <span>Segunda-feira</span>
+          </p>
+
+          <NextAppointment>
+            <strong>Atendimento a seguir</strong>
+            <div>
+              <img
+                src={
+                  user.avatar_url ||
+                  'https://gravatar.com/avatar/1d0df06e255a4ab0702a05a5608eacd3?s=400&d=wavatar&r=x'
+                }
+                alt={user.name}
+              />
+              <strong>Luis Costa</strong>
+              <span>
+                <FiClock />
+                08:00
+              </span>
+            </div>
+          </NextAppointment>
+        </Schedule>
+        <Calendar />
+      </Content>
     </Container>
+  );
+};
 
-  )
-}
-
-export default Dashboard
+export default Dashboard;
